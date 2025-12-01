@@ -1,7 +1,4 @@
 --extra-index-url https://download.pytorch.org/whl/cpu
-streamlit==1.35.0
-streamlit-drawable-canvas
-opencv-python-headless
 numpy<2.0.0
 pandas
 Pillow
@@ -9,6 +6,11 @@ scipy
 plotly
 reportlab
 qrcode
-torch
-torchvision
-git+https://github.com/facebookresearch/detectron2.git
+streamlit==1.35.0
+streamlit-drawable-canvas
+opencv-python-headless
+# --- Versiones fijas para evitar sobrecarga de memoria ---
+torch==2.0.1
+torchvision==0.15.2
+# --- Detectron2 anclado a una versión estable ---
+git+https://github.com/facebookresearch/detectron2.git@v0.6
