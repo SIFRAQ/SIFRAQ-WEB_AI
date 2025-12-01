@@ -1,29 +1,14 @@
-# --- Tu versión probada de Streamlit ---
+--extra-index-url https://download.pytorch.org/whl/cpu
 streamlit==1.35.0
 streamlit-drawable-canvas
-
-# --- Importante para la Nube (Linux sin monitor) ---
-# Usamos "headless" para que no de error de pantalla en el servidor
 opencv-python-headless
-
-# --- Restricción de seguridad ---
-# Numpy 2.0 salió hace poco y rompe muchas librerías de IA antiguas.
-# Mantenemos una versión anterior a la 2.0 para asegurar compatibilidad con Detectron2.
 numpy<2.0.0
-
-# --- Procesamiento de Datos ---
 pandas
 Pillow
 scipy
-
-# --- Reportes y Gráficos ---
 plotly
 reportlab
 qrcode
-
-# --- Inteligencia Artificial (Versiones CPU para la nube) ---
 torch
 torchvision
-
-# --- Detectron2 desde la fuente oficial (Compatible Linux) ---
 git+https://github.com/facebookresearch/detectron2.git
