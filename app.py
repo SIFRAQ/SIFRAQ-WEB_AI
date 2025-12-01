@@ -4,23 +4,33 @@ import subprocess
 import os
 
 # ==========================================
-# BLOQUE DE INSTALACIÓN DE EMERGENCIA
+# BLOQUE DE INSTALACIÓN DE EMERGENCIA (CORREGIDO)
 # ==========================================
-# Esto permite instalar Detectron2 "en caliente" saltando los errores de compilación de la nube
 try:
     import detectron2
 except ImportError:
-    # Mostramos un mensaje mientras instala (solo la primera vez)
-    st.warning("⚠️ Configurando entorno de Inteligencia Artificial... (Esto puede tardar 2 minutos)")
-    subprocess.check_call([
-        sys.executable, "-m", "pip", "install", 
-        "git+https://github.com/facebookresearch/detectron2.git@v0.6"
-    ])
-    # Recargamos la app automáticamente una vez instalado
-    st.rerun()
+    st.warning("⚠️ Configurando entorno de Inteligencia Artificial... (Esto tardará unos minutos, por favor espera)")
+    
+    # 1. Forzamos modo CPU para ahorrar memoria durante la instalación
+    os.environ["FORCE_CUDA"] = "0"
+    os.environ["TORCH_CUDA_ARCH_LIST"] = ""
+    
+    # 2. Instalamos usando "--no-build-isolation" para que detecte el PyTorch que ya tenemos
+    try:
+        subprocess.check_call([
+            sys.executable, "-m", "pip", "install", 
+            "git+https://github.com/facebookresearch/detectron2.git@v0.6",
+            "--no-build-isolation", 
+            "--no-cache-dir"
+        ])
+        # 3. Recargamos la app
+        st.rerun()
+    except subprocess.CalledProcessError as e:
+        st.error(f"Error crítico instalando IA: {e}")
+        st.stop()
 
 # ---------------------------------------------
-# IMPORTACIONES NORMALES (El resto de tu código)
+# IMPORTACIONES NORMALES
 # ---------------------------------------------
 import cv2
 import numpy as np
@@ -51,6 +61,8 @@ import tempfile
 from detectron2.engine import DefaultPredictor
 from detectron2.config import get_cfg
 from detectron2 import model_zoo
+
+# ... (EL RESTO DE TU CÓDIGO SIGUE IGUAL) ...
 
 #---------------------------------------------------------------------
 import streamlit as st

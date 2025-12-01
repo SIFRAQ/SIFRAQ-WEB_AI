@@ -9,5 +9,6 @@ qrcode
 streamlit==1.35.0
 streamlit-drawable-canvas
 opencv-python-headless
+# Solo PyTorch aquí (Detectron2 lo instalamos en app.py)
 torch==2.0.1
 torchvision==0.15.2
