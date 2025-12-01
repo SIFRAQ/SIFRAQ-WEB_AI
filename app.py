@@ -1,21 +1,16 @@
 # ==========================================
-# CONFIGURACIÓN DE PÁGINA Y ESTILOS
+# IMPORT DE STREAMLIT - ABSOLUTAMENTE PRIMERO
+# ==========================================
+import streamlit as st
+
+# ==========================================
+# CONFIGURACIÓN DE PÁGINA - DEBE SER SEGUNDO
 # ==========================================
 st.set_page_config(page_title="SIFRAQ - Minería Inteligente", layout="wide", page_icon="🪨")
 
-# --- CONFIGURACIÓN DE DETECTRON2 ---
-# SOLO DESPUÉS de st.set_page_config()
-DETECTRON2_AVAILABLE = False
-try:
-    from detectron2.engine import DefaultPredictor
-    from detectron2.config import get_cfg
-    from detectron2 import model_zoo
-    DETECTRON2_AVAILABLE = True
-except ImportError:
-    pass  # No mostrar warning todavía
-
-# Ahora sigue el resto de tu código...
-import streamlit as st
+# ==========================================
+# AHORA EL RESTO DE IMPORTS
+# ==========================================
 import cv2
 import numpy as np
 import pandas as pd
@@ -29,7 +24,6 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor
 from reportlab.lib import colors
-# Importamos PageBreak para forzar el salto de página
 from reportlab.platypus import Table, TableStyle, SimpleDocTemplate, Paragraph, Spacer, KeepTogether, PageBreak
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -43,60 +37,63 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import tempfile
 
-# --- CONFIGURACIÓN DE DETECTRON2 ---
-#from detectron2.engine import DefaultPredictor
-#from detectron2.config import get_cfg
-#from detectron2 import model_zoo
+# --- VERIFICACIÓN DE DETECTRON2 ---
+DETECTRON2_AVAILABLE = False
+try:
+    from detectron2.engine import DefaultPredictor
+    from detectron2.config import get_cfg
+    from detectron2 import model_zoo
+    DETECTRON2_AVAILABLE = True
+except ImportError:
+    # No mostrar warning aquí todavía
+    pass
 
 # ==========================================
-# CONFIGURACIÓN DE PÁGINA Y ESTILOS
+# ESTILOS CSS PROFESIONALES
 # ==========================================
-st.set_page_config(page_title="SIFRAQ - Minería Inteligente", layout="wide", page_icon="🪨")
-
-# Estilos CSS Profesionales (Mining Tech Theme - High Contrast for Dark Mode)
 st.markdown("""
 <style>
     /* Fondo General */
     .stApp {
         background-color: #0E1117;
-        color: #F0F2F6; /* Blanco humo para texto general */
+        color: #F0F2F6;
     }
 
-    /* Títulos Principales (H1, H2, H3) - Colores Cyan y Azul Eléctrico */
+    /* Títulos Principales */
     h1, h2, h3 {
-        color: #00E5FF !important; /* Cyan Brillante */
+        color: #00E5FF !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-weight: 700;
     }
     
-    /* Subtítulos o H4, H5 */
+    /* Subtítulos */
     h4, h5, h6 {
-        color: #2979FF !important; /* Azul Eléctrico */
+        color: #2979FF !important;
         font-weight: 600;
     }
 
-    /* Textos de Párrafos y Span */
+    /* Textos */
     p, div, span {
-        color: #E0E0E0; /* Gris muy claro */
+        color: #E0E0E0;
     }
 
-    /* Etiquetas de Inputs (Text Input, Number Input, etc) */
+    /* Etiquetas de Inputs */
     .stTextInput > label, .stNumberInput > label, .stSelectbox > label, .stCheckbox > label, .stFileUploader > label {
-        color: #00E5FF !important; /* Cyan para que resalte sobre el negro */
+        color: #00E5FF !important;
         font-weight: bold;
     }
 
-    /* Métricas (st.metric) */
+    /* Métricas */
     [data-testid="stMetricLabel"] {
-        color: #2979FF !important; /* Etiqueta azul */
+        color: #2979FF !important;
     }
     [data-testid="stMetricValue"] {
-        color: #FFFFFF !important; /* Valor en blanco puro */
+        color: #FFFFFF !important;
     }
 
-    /* Botones Estilizados */
+    /* Botones */
     .stButton>button {
-        background: linear-gradient(135deg, #00B4DB 0%, #0083B0 100%); /* Gradiente Cyan-Azul */
+        background: linear-gradient(135deg, #00B4DB 0%, #0083B0 100%);
         color: white;
         border: 1px solid #00E5FF;
         border-radius: 6px;
@@ -116,7 +113,7 @@ st.markdown("""
         border-right: 1px solid #30363D;
     }
     
-    /* Indicador de pasos en Sidebar */
+    /* Indicador de pasos */
     .step-indicator {
         padding: 10px;
         margin: 5px 0;
@@ -142,12 +139,18 @@ st.markdown("""
         margin-bottom: 20px;
     }
     
-    /* Eliminar ejes blancos de Plotly para integración oscura */
+    /* Plotly */
     .js-plotly-plot .plotly .main-svg { 
         background: transparent !important; 
     }
 </style>
 """, unsafe_allow_html=True)
+
+# ==========================================
+# VERIFICACIÓN DE DETECTRON2 (mostrar warning si no está)
+# ==========================================
+if not DETECTRON2_AVAILABLE:
+    st.warning("⚠️ Detectron2 no está disponible. La funcionalidad de IA estará limitada.")
 
 # ==========================================
 # GESTIÓN DE ESTADO
@@ -215,6 +218,8 @@ class FragmentAnalyzerEnhanced:
         except Exception as e:
             print(f"Error cálculo tamaño: {e}")
             return None
+
+# ... [EL RESTO DE TU CÓDIGO PERMANECE IGUAL DESDE AQUÍ] ...
 
 def preprocesar_imagen(image_np):
     """Preprocesamiento mejorado basado en Colab"""
