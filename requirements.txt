@@ -1,7 +1,15 @@
+# ========= ACTUALIZAR PIP PRIMERO =========
+--upgrade pip
+
+# ========= PYTORCH - VERSIÓN CPU (COMPATIBLE CON DETECTRON2 v0.6) =========
+--index-url https://download.pytorch.org/whl/cpu
 torch==1.10.0
 torchvision==0.11.0
+torchaudio==0.10.0
+
+# ========= DETECTRON2 - WHEEL PRECOMPILADO =========
 detectron2@https://dl.fbaipublicfiles.com/detectron2/wheels/cpu/torch1.10/detectron2-0.6%2Bcpu-cp310-cp310-linux_x86_64.whl
-# luego el resto de tus dependencias...
+
 # ========= DEPENDENCIAS BÁSICAS =========
 streamlit==1.35.0
 numpy==1.24.4
@@ -14,13 +22,3 @@ streamlit-drawable-canvas==0.9.3
 opencv-python-headless==4.9.0.80
 matplotlib==3.7.5
 scipy==1.11.4
-
-# ========= PYTORCH - VERSIÓN CPU =========
---index-url https://download.pytorch.org/whl/cpu
-torch==2.0.1
-torchvision==0.15.2
-torchaudio==2.0.2
-
-# ========= DETECTRON2 - ESTRATEGIA SEGURA =========
-# Instalar desde GitHub CON FLAGS ESPECÍFICOS
-git+https://github.com/facebookresearch/detectron2.git@v0.6
