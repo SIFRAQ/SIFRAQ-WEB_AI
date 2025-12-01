@@ -1,10 +1,7 @@
-# ========= PYTORCH - VERSIÓN CPU (COMPATIBLE CON DETECTRON2 v0.6) =========
-torch==1.10.0
-torchvision==0.11.0
-torchaudio==0.10.0
-
-# ========= DETECTRON2 - WHEEL PRECOMPILADO PARA PYTHON 3.10 CPU =========
-detectron2@https://dl.fbaipublicfiles.com/detectron2/wheels/cpu/torch1.10/detectron2-0.6%2Bcpu-cp310-cp310-linux_x86_64.whl
+# ========= PYTORCH - VERSIÓN CPU =========
+torch==1.10.0+cpu
+torchvision==0.11.0+cpu
+torchaudio==0.10.0+cpu
 
 # ========= DEPENDENCIAS BÁSICAS =========
 streamlit==1.35.0
@@ -18,3 +15,6 @@ streamlit-drawable-canvas==0.9.3
 opencv-python-headless==4.9.0.80
 matplotlib==3.7.5
 scipy==1.11.4
+
+# ========= DETECTRON2 DESDE GITHUB =========
+git+https://github.com/facebookresearch/detectron2.git@v0.6
