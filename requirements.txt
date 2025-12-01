@@ -1,17 +1,16 @@
---extra-index-url https://download.pytorch.org/whl/cpu
-numpy<2.0.0
-pandas
-Pillow
-scipy
-plotly
-reportlab
-qrcode
+numpy==1.24.3
+pandas==2.0.3
+Pillow==10.2.0
+scipy==1.11.4
+plotly==5.18.0
+reportlab==4.1.0
+qrcode[pil]==7.4.2
 streamlit==1.35.0
-streamlit-drawable-canvas
-opencv-python-headless
-# Anclamos PyTorch 2.0.1 que es compatible con el archivo que vamos a descargar
+streamlit-drawable-canvas==0.9.3
+opencv-python-headless==4.9.0.80
 torch==2.0.1
 torchvision==0.15.2
-# --- SOLUCIÓN FINAL: Enlace directo al archivo pre-compilado (.whl) ---
-# Esto evita que el servidor intente "construir" y falle.
-https://dl.fbaipublicfiles.com/detectron2/whl/cpu/torch2.0/detectron2-0.6-cp310-cp310-linux_x86_64.whl
+matplotlib==3.7.5
+pycocotools==2.0.7
+# Detectron2 - método alternativo
+git+https://github.com/facebookresearch/detectron2.git
