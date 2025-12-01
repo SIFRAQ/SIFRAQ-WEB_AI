@@ -25,11 +25,21 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 from datetime import datetime
 import tempfile
+#-------------------------------------------------------------------------------------
+# Manejo de importación condicional de detectron2
+DETECTRON2_AVAILABLE = False
+try:
+    from detectron2.engine import DefaultPredictor
+    from detectron2.config import get_cfg
+    from detectron2 import model_zoo
+    DETECTRON2_AVAILABLE = True
+except ImportError:
+    st.warning("⚠️ Detectron2 no está disponible. La funcionalidad de IA estará limitada.")
 
 # --- CONFIGURACIÓN DE DETECTRON2 ---
-from detectron2.engine import DefaultPredictor
-from detectron2.config import get_cfg
-from detectron2 import model_zoo
+#from detectron2.engine import DefaultPredictor
+#from detectron2.config import get_cfg
+#from detectron2 import model_zoo
 
 # ==========================================
 # CONFIGURACIÓN DE PÁGINA Y ESTILOS
@@ -215,6 +225,11 @@ def preprocesar_imagen(image_np):
 @st.cache_resource
 def cargar_modelo():
     try:
+        # Intentar importar detectron2 dinámicamente
+        from detectron2.engine import DefaultPredictor
+        from detectron2.config import get_cfg
+        from detectron2 import model_zoo
+        
         cfg = get_cfg()
         cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x.yaml"))
         cfg.MODEL.DEVICE = "cpu"
@@ -231,6 +246,9 @@ def cargar_modelo():
         cfg.TEST.DETECTIONS_PER_IMAGE = 1000 
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5 
         return DefaultPredictor(cfg)
+    except ImportError as e:
+        st.warning("⚠️ Detectron2 no está disponible. Usando modo de demostración con OpenCV.")
+        return None
     except Exception as e:
         st.error(f"Error cargando modelo: {e}")
         return None
