@@ -1,71 +1,4 @@
 import streamlit as st
-import sys
-import subprocess
-import os
-
-# ==========================================
-# BLOQUE DE INSTALACIÓN DE EMERGENCIA (CORREGIDO)
-# ==========================================
-try:
-    import detectron2
-except ImportError:
-    st.warning("⚠️ Configurando entorno de Inteligencia Artificial... (Esto tardará unos minutos, por favor espera)")
-    
-    # 1. Forzamos modo CPU para ahorrar memoria durante la instalación
-    os.environ["FORCE_CUDA"] = "0"
-    os.environ["TORCH_CUDA_ARCH_LIST"] = ""
-    
-    # 2. Instalamos usando "--no-build-isolation" para que detecte el PyTorch que ya tenemos
-    try:
-        subprocess.check_call([
-            sys.executable, "-m", "pip", "install", 
-            "git+https://github.com/facebookresearch/detectron2.git@v0.6",
-            "--no-build-isolation", 
-            "--no-cache-dir"
-        ])
-        # 3. Recargamos la app
-        st.rerun()
-    except subprocess.CalledProcessError as e:
-        st.error(f"Error crítico instalando IA: {e}")
-        st.stop()
-
-# ---------------------------------------------
-# IMPORTACIONES NORMALES
-# ---------------------------------------------
-import cv2
-import numpy as np
-import pandas as pd
-import torch
-import time
-import io
-import qrcode
-from PIL import Image
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
-from reportlab.lib.colors import HexColor
-from reportlab.lib import colors
-from reportlab.platypus import Table, TableStyle, SimpleDocTemplate, Paragraph, Spacer, KeepTogether, PageBreak
-from reportlab.lib.utils import ImageReader
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import cm
-from reportlab.platypus.flowables import Image as ReportLabImage
-from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT
-from streamlit_drawable_canvas import st_canvas
-import plotly.express as px
-import plotly.graph_objects as go
-import matplotlib.pyplot as plt
-from datetime import datetime
-import tempfile
-
-# --- CONFIGURACIÓN DE DETECTRON2 ---
-from detectron2.engine import DefaultPredictor
-from detectron2.config import get_cfg
-from detectron2 import model_zoo
-
-# ... (EL RESTO DE TU CÓDIGO SIGUE IGUAL) ...
-
-#---------------------------------------------------------------------
-import streamlit as st
 import cv2
 import numpy as np
 import pandas as pd
@@ -1198,7 +1131,7 @@ def crear_pdf_profesional():
 
     # Pie de página final
     story.append(Spacer(1, 20))
-    story.append(Paragraph("Generado automáticamente por SIFRAQ - Sistema Inteligente de Fragmentación Quinde", ParagraphStyle('footer', parent=styles['Normal'], fontSize=8, alignment=TA_CENTER, textColor=colors.grey)))
+    story.append(Paragraph("Generado automáticamente por SIFRAQ - Sistema Inteligente de Fragmentación de Rocas", ParagraphStyle('footer', parent=styles['Normal'], fontSize=8, alignment=TA_CENTER, textColor=colors.grey)))
 
     doc.build(story, onFirstPage=draw_background, onLaterPages=draw_background)
     buffer.seek(0)
@@ -1288,6 +1221,7 @@ def show_report():
     if st.button("🔄 Realizar Nuevo Análisis", use_container_width=True):
         reset_app()
 
+# ... (El resto del ruteo sigue igual) ...
 # ==========================================
 # RUTEO PRINCIPAL
 # ==========================================

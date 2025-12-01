@@ -1,14 +1,39 @@
---extra-index-url https://download.pytorch.org/whl/cpu
+# --- Núcleo de la Aplicación ---
+
+streamlit==1.32.0
+
+lienzo dibujable streamlit
+
+
+
+# --- Procesamiento de Imágenes y Datos ---
+
+# Usamos esta versión específica de OpenCV para evitar conflictos con NumPy 2.0
+
+opencv-python==4.9.0.80
+
 numpy<2.0.0
+
 pandas
-Pillow
-scipy
-plotly
-reportlab
-qrcode
-streamlit==1.35.0
-streamlit-drawable-canvas
-opencv-python-headless
-# Solo PyTorch aquí (Detectron2 lo instalamos en app.py)
-torch==2.0.1
-torchvision==0.15.2
+
+Almohada
+
+escipión
+
+
+
+# --- Gráficos y Reportes ---
+
+argumentalmente
+
+laboratorio de informes
+
+código QR
+
+
+
+# --- Nota sobre IA ---
+
+# PyTorch y Detectron2 NO se ponen aquí para Windows
+
+# porque requiere instalación manual especial (ya la hiciste).
