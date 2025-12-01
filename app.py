@@ -220,7 +220,6 @@ class FragmentAnalyzerEnhanced:
             return None
 
 # ... [EL RESTO DE TU CÓDIGO PERMANECE IGUAL DESDE AQUÍ] ...
-
 def preprocesar_imagen(image_np):
     """Preprocesamiento mejorado basado en Colab"""
     if len(image_np.shape) == 3:
