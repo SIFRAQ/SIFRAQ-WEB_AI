@@ -37,6 +37,46 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import tempfile
 
+def instalar_detectron2():
+    """Función para instalar detectron2 desde la app si no está disponible"""
+    if st.button("🔄 Instalar Detectron2 (IA)", key="install_d2"):
+        with st.spinner("Instalando Detectron2... Esto puede tomar 3-5 minutos."):
+            import subprocess
+            import sys
+            
+            # Comando optimizado para Streamlit Cloud
+            cmd = [
+                sys.executable, "-m", "pip", "install",
+                "git+https://github.com/facebookresearch/detectron2.git",
+                "--no-deps",  # No instalar dependencias (ya las tenemos)
+                "--no-build-isolation",  # Usar torch ya instalado
+                "--verbose"
+            ]
+            
+            try:
+                result = subprocess.run(
+                    cmd, 
+                    capture_output=True, 
+                    text=True,
+                    timeout=300  # 5 minutos timeout
+                )
+                
+                if result.returncode == 0:
+                    st.success("✅ Detectron2 instalado exitosamente!")
+                    st.info("Por favor, recarga la página (F5 o Ctrl+R)")
+                    # Mostrar logs si quieres debug
+                    with st.expander("Ver logs de instalación"):
+                        st.code(result.stdout)
+                else:
+                    st.error("❌ Error instalando Detectron2")
+                    with st.expander("Ver detalles del error"):
+                        st.code(result.stderr)
+                        
+            except subprocess.TimeoutExpired:
+                st.error("⏰ Timeout: La instalación tomó demasiado tiempo")
+            except Exception as e:
+                st.error(f"Error: {e}")
+
 # --- VERIFICACIÓN DE DETECTRON2 ---
 DETECTRON2_AVAILABLE = False
 try:

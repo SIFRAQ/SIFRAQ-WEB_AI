@@ -1,12 +1,8 @@
-# requirements.txt CORREGIDO
-# ==========================
-
-# Dependencias básicas
+# requirements.txt - VERSIÓN SIMPLIFICADA PERO FUNCIONAL
 streamlit==1.35.0
 numpy==1.24.4
 pandas==2.0.3
 Pillow==10.2.0
-scipy==1.11.4
 plotly==5.18.0
 reportlab==4.1.0
 qrcode[pil]==7.4.2
@@ -14,15 +10,11 @@ streamlit-drawable-canvas==0.9.3
 opencv-python-headless==4.9.0.80
 matplotlib==3.7.5
 
-# PyTorch - especificar versión CPU desde PyPI oficial
---extra-index-url https://download.pytorch.org/whl/cpu
+# PyTorch LIGERO (sin detectron2 inicialmente)
+--index-url https://download.pytorch.org/whl/cpu
 torch==2.0.1
 torchvision==0.15.2
-torchaudio==2.0.2
 
-# Detectron2 - INSTALACIÓN COMPATIBLE
-# Primero instalar pycocotools
-pycocotools==2.0.7
-
-# Detectron2 - usar este método alternativo
-git+https://github.com/facebookresearch/detectron2.git
+# Comentar detectron2 temporalmente para que la app se despliegue
+# Luego instalar manualmente desde la app
+# git+https://github.com/facebookresearch/detectron2.git
