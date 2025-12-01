@@ -1,34 +1,22 @@
-# Streamlit Cloud Optimized Requirements
-# Última versión compatible de cada paquete
-
-# Core
-streamlit==1.35.0
-numpy==1.24.4
-pandas==2.0.3
-
-# Visualización
-plotly==5.18.0
-matplotlib==3.7.5
-
-# Procesamiento de imágenes
-opencv-python-headless==4.9.0.80
-Pillow==10.2.0
-streamlit-drawable-canvas==0.9.3
-
-# PDF y reportes
-reportlab==4.1.0
-qrcode[pil]==7.4.2
-
-# Otros
-scipy==1.11.4
-
-# PyTorch - versión CPU para compatibilidad
+# Versión con detectron2 pre-compilado para Python 3.10
+--extra-index-url https://download.pytorch.org/whl/cpu
 torch==2.0.1
 torchvision==0.15.2
 torchaudio==2.0.2
 
-# Detectron2 - SI FALLA, COMENTAR ESTA LÍNEA
-git+https://github.com/facebookresearch/detectron2.git
+# Dependencias básicas
+streamlit==1.35.0
+numpy<2.0.0
+pandas
+Pillow
+scipy
+plotly
+reportlab
+qrcode[pil]
+streamlit-drawable-canvas
+opencv-python-headless
+matplotlib
+pycocotools
 
-# Pycocotools para detectron2
-pycocotools==2.0.7
+# Detectron2 - VERSIÓN ESPECÍFICA
+detectron2 @ https://dl.fbaipublicfiles.com/detectron2/wheels/cpu/torch2.0/detectron2-0.6%2Bcpu-cp310-cp310-linux_x86_64.whl
