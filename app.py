@@ -1,4 +1,59 @@
 import streamlit as st
+import sys
+import subprocess
+import os
+
+# ==========================================
+# BLOQUE DE INSTALACIÓN DE EMERGENCIA
+# ==========================================
+# Esto permite instalar Detectron2 "en caliente" saltando los errores de compilación de la nube
+try:
+    import detectron2
+except ImportError:
+    # Mostramos un mensaje mientras instala (solo la primera vez)
+    st.warning("⚠️ Configurando entorno de Inteligencia Artificial... (Esto puede tardar 2 minutos)")
+    subprocess.check_call([
+        sys.executable, "-m", "pip", "install", 
+        "git+https://github.com/facebookresearch/detectron2.git@v0.6"
+    ])
+    # Recargamos la app automáticamente una vez instalado
+    st.rerun()
+
+# ---------------------------------------------
+# IMPORTACIONES NORMALES (El resto de tu código)
+# ---------------------------------------------
+import cv2
+import numpy as np
+import pandas as pd
+import torch
+import time
+import io
+import qrcode
+from PIL import Image
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+from reportlab.lib.colors import HexColor
+from reportlab.lib import colors
+from reportlab.platypus import Table, TableStyle, SimpleDocTemplate, Paragraph, Spacer, KeepTogether, PageBreak
+from reportlab.lib.utils import ImageReader
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import cm
+from reportlab.platypus.flowables import Image as ReportLabImage
+from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY, TA_LEFT
+from streamlit_drawable_canvas import st_canvas
+import plotly.express as px
+import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+from datetime import datetime
+import tempfile
+
+# --- CONFIGURACIÓN DE DETECTRON2 ---
+from detectron2.engine import DefaultPredictor
+from detectron2.config import get_cfg
+from detectron2 import model_zoo
+
+#---------------------------------------------------------------------
+import streamlit as st
 import cv2
 import numpy as np
 import pandas as pd
