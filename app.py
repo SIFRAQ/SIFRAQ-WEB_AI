@@ -9,12 +9,60 @@ import streamlit as st
 st.set_page_config(page_title="SIFRAQ - Minería Inteligente", layout="wide", page_icon="🪨")
 
 # ==========================================
-# AHORA EL RESTO DE IMPORTS
+# VERIFICACIÓN INMEDIATA DE DEPENDENCIAS
+# ==========================================
+def verificar_e_instalar_dependencias():
+    """Verifica detectron2 y muestra opción de instalación si falta"""
+    try:
+        from detectron2.engine import DefaultPredictor
+        from detectron2.config import get_cfg
+        from detectron2 import model_zoo
+        return True
+    except ImportError:
+        # Mostrar advertencia EN LA BARRA LATERAL para no interrumpir
+        st.sidebar.error("⚠️ **DETECTRON2 NO INSTALADO**")
+        st.sidebar.info("La funcionalidad de IA está desactivada.")
+        
+        with st.sidebar.expander("🔄 Instalar Detectron2 (IA)"):
+            if st.button("🔧 Instalar ahora", key="install_d2_sidebar"):
+                with st.spinner("Instalando... (3-5 min)"):
+                    import subprocess
+                    import sys
+                    
+                    # Comando OPTIMIZADO para Streamlit Cloud
+                    cmd = [
+                        sys.executable, "-m", "pip", "install",
+                        "git+https://github.com/facebookresearch/detectron2.git@v0.6",
+                        "--no-deps",
+                        "--no-build-isolation",
+                        "--timeout", "300"
+                    ]
+                    
+                    try:
+                        result = subprocess.run(
+                            cmd, 
+                            capture_output=True, 
+                            text=True,
+                            timeout=300
+                        )
+                        
+                        if result.returncode == 0:
+                            st.success("✅ ¡Instalado! Recargando...")
+                            st.rerun()
+                        else:
+                            st.error("❌ Error en instalación")
+                            with st.expander("Detalles"):
+                                st.code(result.stderr[:500])
+                    except Exception as e:
+                        st.error(f"Error: {str(e)[:100]}")
+        return False
+
+# ==========================================
+# AHORA EL RESTO DE IMPORTS (SIN DETECTRON2)
 # ==========================================
 import cv2
 import numpy as np
 import pandas as pd
-import torch
 import os
 import time
 import io
@@ -37,56 +85,10 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import tempfile
 
-def instalar_detectron2():
-    """Función para instalar detectron2 desde la app si no está disponible"""
-    if st.button("🔄 Instalar Detectron2 (IA)", key="install_d2"):
-        with st.spinner("Instalando Detectron2... Esto puede tomar 3-5 minutos."):
-            import subprocess
-            import sys
-            
-            # Comando optimizado para Streamlit Cloud
-            cmd = [
-                sys.executable, "-m", "pip", "install",
-                "git+https://github.com/facebookresearch/detectron2.git",
-                "--no-deps",  # No instalar dependencias (ya las tenemos)
-                "--no-build-isolation",  # Usar torch ya instalado
-                "--verbose"
-            ]
-            
-            try:
-                result = subprocess.run(
-                    cmd, 
-                    capture_output=True, 
-                    text=True,
-                    timeout=300  # 5 minutos timeout
-                )
-                
-                if result.returncode == 0:
-                    st.success("✅ Detectron2 instalado exitosamente!")
-                    st.info("Por favor, recarga la página (F5 o Ctrl+R)")
-                    # Mostrar logs si quieres debug
-                    with st.expander("Ver logs de instalación"):
-                        st.code(result.stdout)
-                else:
-                    st.error("❌ Error instalando Detectron2")
-                    with st.expander("Ver detalles del error"):
-                        st.code(result.stderr)
-                        
-            except subprocess.TimeoutExpired:
-                st.error("⏰ Timeout: La instalación tomó demasiado tiempo")
-            except Exception as e:
-                st.error(f"Error: {e}")
-
-# --- VERIFICACIÓN DE DETECTRON2 ---
-DETECTRON2_AVAILABLE = False
-try:
-    from detectron2.engine import DefaultPredictor
-    from detectron2.config import get_cfg
-    from detectron2 import model_zoo
-    DETECTRON2_AVAILABLE = True
-except ImportError:
-    # No mostrar warning aquí todavía
-    pass
+# ==========================================
+# FLAG DE DISPONIBILIDAD DETECTRON2
+# ==========================================
+DETECTRON2_AVAILABLE = verificar_e_instalar_dependencias()
 
 # ==========================================
 # ESTILOS CSS PROFESIONALES
@@ -187,12 +189,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# VERIFICACIÓN DE DETECTRON2 (mostrar warning si no está)
-# ==========================================
-if not DETECTRON2_AVAILABLE:
-    st.warning("⚠️ Detectron2 no está disponible. La funcionalidad de IA estará limitada.")
-
-# ==========================================
 # GESTIÓN DE ESTADO
 # ==========================================
 if 'step' not in st.session_state: st.session_state.step = 0
@@ -259,7 +255,6 @@ class FragmentAnalyzerEnhanced:
             print(f"Error cálculo tamaño: {e}")
             return None
 
-# ... [EL RESTO DE TU CÓDIGO PERMANECE IGUAL DESDE AQUÍ] ...
 def preprocesar_imagen(image_np):
     """Preprocesamiento mejorado basado en Colab"""
     if len(image_np.shape) == 3:
@@ -275,6 +270,58 @@ def preprocesar_imagen(image_np):
 
 @st.cache_resource
 def cargar_modelo():
+    """Carga el modelo de IA o usa modo simulado si detectron2 no está disponible"""
+    if not DETECTRON2_AVAILABLE:
+        st.warning("🔶 **MODO DEMOSTRACIÓN**: Detectron2 no está disponible. Usando análisis básico de OpenCV.")
+        
+        class SimulatedPredictor:
+            def __init__(self):
+                self.model = type('obj', (object,), {
+                    'roi_heads': type('obj', (object,), {
+                        'score_thresh_test': 0.5
+                    })()
+                })()
+            
+            def __call__(self, image):
+                # Análisis básico con OpenCV para demostración
+                st.info("📸 Análisis básico de imagen (modo demo)")
+                
+                # Convertir a escala de grises
+                if len(image.shape) == 3:
+                    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+                else:
+                    gray = image
+                
+                # Detección simple de contornos
+                blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+                _, thresh = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+                
+                # Encontrar contornos
+                contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                
+                # Crear máscaras simuladas
+                height, width = gray.shape
+                masks = []
+                
+                for contour in contours:
+                    if cv2.contourArea(contour) > 100:  # Filtrar pequeños
+                        mask = np.zeros((height, width), dtype=bool)
+                        cv2.drawContours(mask, [contour], -1, True, -1)
+                        masks.append(mask)
+                
+                # Estructurar la salida
+                class OutputSimulado:
+                    def __init__(self, masks):
+                        self.instances = type('obj', (object,), {
+                            'pred_masks': np.array(masks[:10]) if masks else np.array([]),  # Máximo 10
+                            'scores': np.array([0.8] * min(len(masks), 10)) if masks else np.array([]),
+                            'pred_classes': np.array([1] * min(len(masks), 10)) if masks else np.array([])
+                        })()
+                
+                return OutputSimulado(masks[:10]) if masks else OutputSimulado([])
+        
+        return SimulatedPredictor()
+    
     try:
         # Intentar importar detectron2 dinámicamente
         from detectron2.engine import DefaultPredictor
@@ -297,13 +344,11 @@ def cargar_modelo():
         cfg.TEST.DETECTIONS_PER_IMAGE = 1000 
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5 
         return DefaultPredictor(cfg)
-    except ImportError as e:
-        st.warning("⚠️ Detectron2 no está disponible. Usando modo de demostración con OpenCV.")
-        return None
     except Exception as e:
         st.error(f"Error cargando modelo: {e}")
         return None
 
+# ... [EL RESTO DE TU CÓDIGO SIGUE IGUAL] ...
 def calcular_esponjamiento(densidad_insitu, rqd, familias):
     """Calcula densidad suelta y esponjamiento"""
     try:
