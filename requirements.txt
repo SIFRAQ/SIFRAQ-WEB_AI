@@ -9,8 +9,9 @@ qrcode
 streamlit==1.35.0
 streamlit-drawable-canvas
 opencv-python-headless
-# Versiones de PyTorch estables para Python 3.10
+# Anclamos PyTorch 2.0.1 que es compatible con el archivo que vamos a descargar
 torch==2.0.1
 torchvision==0.15.2
-# Detectron2
-git+https://github.com/facebookresearch/detectron2.git
+# --- SOLUCIÓN FINAL: Enlace directo al archivo pre-compilado (.whl) ---
+# Esto evita que el servidor intente "construir" y falle.
+https://dl.fbaipublicfiles.com/detectron2/whl/cpu/torch2.0/detectron2-0.6-cp310-cp310-linux_x86_64.whl
