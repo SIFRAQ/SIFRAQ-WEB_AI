@@ -1,39 +1,14 @@
-# --- Núcleo de la Aplicación ---
-
-streamlit==1.32.0
-
-lienzo dibujable streamlit
-
-
-
-# --- Procesamiento de Imágenes y Datos ---
-
-# Usamos esta versión específica de OpenCV para evitar conflictos con NumPy 2.0
-
-opencv-python==4.9.0.80
-
+--extra-index-url https://download.pytorch.org/whl/cpu
+streamlit==1.35.0
+streamlit-drawable-canvas
+opencv-python-headless
 numpy<2.0.0
-
 pandas
-
-Almohada
-
-escipión
-
-
-
-# --- Gráficos y Reportes ---
-
-argumentalmente
-
-laboratorio de informes
-
-código QR
-
-
-
-# --- Nota sobre IA ---
-
-# PyTorch y Detectron2 NO se ponen aquí para Windows
-
-# porque requiere instalación manual especial (ya la hiciste).
+Pillow
+scipy
+plotly
+reportlab
+qrcode
+torch
+torchvision
+git+https://github.com/facebookresearch/detectron2.git
